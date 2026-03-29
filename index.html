@@ -60,6 +60,15 @@
 
   <time class="date" id="date" datetime=""></time>
 
+  <!-- v8: Win Template Chips -->
+  <div class="win-templates" id="win-templates" aria-label="Win prompt suggestions">
+    <button type="button" class="win-template-chip" data-prompt="What went well at work?">What went well at work?</button>
+    <button type="button" class="win-template-chip" data-prompt="What made you smile?">What made you smile?</button>
+    <button type="button" class="win-template-chip" data-prompt="What did you learn?">What did you learn?</button>
+    <button type="button" class="win-template-chip" data-prompt="What are you grateful for?">What are you grateful for?</button>
+    <button type="button" class="win-template-chip" data-prompt="What challenge did you overcome?">What challenge did you overcome?</button>
+  </div>
+
   <form class="wins" id="wins-form" aria-label="Today's three wins">
     <div class="wins__field">
       <label for="win-1" class="sr-only">Win number 1</label>
@@ -120,6 +129,16 @@
     <button type="button" class="btn--share" id="btn-share" aria-label="Share today's wins as an image card">Share Today's Wins</button>
   </div>
 
+  <!-- v8: Streak Calendar -->
+  <div class="streak-calendar-wrap" id="streak-calendar-wrap">
+    <div class="streak-calendar-header">
+      <button type="button" class="streak-cal-nav" id="streak-cal-prev" aria-label="Previous month">&larr;</button>
+      <span class="streak-cal-title" id="streak-cal-title"></span>
+      <button type="button" class="streak-cal-nav" id="streak-cal-next" aria-label="Next month">&rarr;</button>
+    </div>
+    <div class="streak-calendar-grid" id="streak-calendar-grid"></div>
+  </div>
+
   <div class="export-wrap" id="export-wrap">
     <button type="button" class="btn--export" id="btn-export" aria-label="Export all wins as text file">Export Wins</button>
   </div>
@@ -173,6 +192,10 @@
     <button class="pwa-install-banner__btn pwa-install-banner__btn--install" id="pwaInstallBtn">Install</button>
   </div>
 </div>
+<!-- v8: Dark Mode Toggle -->
+<button class="dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+  <span class="dark-mode-icon" id="dark-mode-icon">&#x2600;&#xFE0F;</span>
+</button>
 <div class="oc-footer"><a href="https://magic-dev-kz.github.io/openclaw/" target="_blank" rel="noopener">More free tools → OpenClaw</a></div>
 </body>
 </html>

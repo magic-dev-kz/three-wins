@@ -1,5 +1,15 @@
 # Three Wins — Changelog
 
+## v8.0 (2026-03-29)
+### Added
+- **Win Templates** — 5 clickable prompt chips above the win inputs: "What went well at work?", "What made you smile?", "What did you learn?", "What are you grateful for?", "What challenge did you overcome?". Clicking fills the first empty input with the prompt text. Chips hidden in saved/readonly state, shown again on edit.
+- **Streak Calendar** — monthly calendar view with green-highlighted days that have saved wins. Navigation arrows for previous/next months. Today highlighted with orange border. Future dates dimmed. Re-renders after saving wins.
+- **Dark mode toggle** — fixed-position sun/moon button in bottom-right corner. Toggles between dark (default) and light theme. Light theme uses warm beige/cream palette with CSS custom properties. Theme preference persisted in localStorage. Updates meta theme-color for PWA chrome.
+
+### Changed
+- CSS comment header updated to v8
+- SW cache bumped to `three-wins-v8`
+
 ## v7.0 (2026-03-29)
 ### Added
 - **PWA install prompt** — custom banner appears after 3+ visits when the browser fires `beforeinstallprompt`; glassmorphism styling with orange gradient install button; dismissible with localStorage persistence

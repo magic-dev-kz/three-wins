@@ -1496,6 +1496,174 @@
     }
   });
 
+  // === v8: Win Template Chips ===
+  (function initWinTemplates() {
+    var $templates = document.getElementById('win-templates');
+    if (!$templates) return;
+    var chips = $templates.querySelectorAll('.win-template-chip');
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var prompt = chip.getAttribute('data-prompt');
+        if (!prompt) return;
+        // Find first empty input and fill it
+        for (var i = 0; i < $inputs.length; i++) {
+          if (!$inputs[i].value.trim() && !$inputs[i].readOnly) {
+            $inputs[i].value = prompt;
+            $inputs[i].classList.add('has-text');
+            $inputs[i].focus();
+            updateDoneButton();
+            return;
+          }
+        }
+      });
+    });
+
+    // Hide chips when all inputs are saved (readonly)
+    var origShowSaved = showSavedState;
+    showSavedState = function () {
+      origShowSaved();
+      $templates.hidden = true;
+    };
+    var origShowEdit = showEditState;
+    showEditState = function () {
+      origShowEdit();
+      $templates.hidden = false;
+    };
+  })();
+
+  // === v8: Streak Calendar ===
+  var _calYear, _calMonth;
+  (function initStreakCalendar() {
+    var $wrap = document.getElementById('streak-calendar-wrap');
+    var $grid = document.getElementById('streak-calendar-grid');
+    var $title = document.getElementById('streak-cal-title');
+    var $prev = document.getElementById('streak-cal-prev');
+    var $next = document.getElementById('streak-cal-next');
+    if (!$wrap || !$grid) return;
+
+    var now = new Date();
+    _calYear = now.getFullYear();
+    _calMonth = now.getMonth();
+
+    function renderCalendar() {
+      var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      $title.textContent = monthNames[_calMonth] + ' ' + _calYear;
+      $grid.innerHTML = '';
+
+      // Day labels
+      var dayLabels = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+      dayLabels.forEach(function (label) {
+        var el = document.createElement('div');
+        el.className = 'streak-cal-day-label';
+        el.textContent = label;
+        $grid.appendChild(el);
+      });
+
+      var firstDay = new Date(_calYear, _calMonth, 1).getDay();
+      var daysInMonth = new Date(_calYear, _calMonth + 1, 0).getDate();
+      var today = todayKey();
+
+      // Empty cells before first day
+      for (var e = 0; e < firstDay; e++) {
+        var empty = document.createElement('div');
+        empty.className = 'streak-cal-cell streak-cal-cell--empty';
+        $grid.appendChild(empty);
+      }
+
+      // Day cells
+      for (var d = 1; d <= daysInMonth; d++) {
+        var cell = document.createElement('div');
+        cell.className = 'streak-cal-cell';
+        cell.textContent = String(d);
+
+        var dateKey = _calYear + '-' + String(_calMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        var entry = loadEntry(dateKey);
+
+        if (entry) {
+          cell.classList.add('streak-cal-cell--has-entry');
+        }
+
+        if (dateKey === today) {
+          cell.classList.add('streak-cal-cell--today');
+        }
+
+        // Future dates
+        var cellDate = new Date(_calYear, _calMonth, d);
+        if (cellDate > new Date()) {
+          cell.classList.add('streak-cal-cell--future');
+        }
+
+        $grid.appendChild(cell);
+      }
+
+      // Disable next if showing current month
+      var nowDate = new Date();
+      $next.disabled = (_calYear === nowDate.getFullYear() && _calMonth === nowDate.getMonth());
+      $next.style.opacity = $next.disabled ? '0.3' : '1';
+    }
+
+    $prev.addEventListener('click', function () {
+      _calMonth--;
+      if (_calMonth < 0) { _calMonth = 11; _calYear--; }
+      renderCalendar();
+    });
+
+    $next.addEventListener('click', function () {
+      if ($next.disabled) return;
+      _calMonth++;
+      if (_calMonth > 11) { _calMonth = 0; _calYear++; }
+      renderCalendar();
+    });
+
+    // Expose for re-render after save
+    window._renderStreakCalendar = renderCalendar;
+    renderCalendar();
+  })();
+
+  // Hook calendar re-render into save
+  var _origFormSubmit = $form.onsubmit;
+  $form.addEventListener('submit', function () {
+    setTimeout(function () {
+      if (window._renderStreakCalendar) window._renderStreakCalendar();
+    }, 100);
+  });
+
+  // === v8: Dark Mode Toggle ===
+  (function initDarkMode() {
+    var THEME_KEY = 'threeWins_theme';
+    var $toggle = document.getElementById('dark-mode-toggle');
+    var $icon = document.getElementById('dark-mode-icon');
+    if (!$toggle) return;
+
+    function applyTheme(theme) {
+      if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        $icon.textContent = '\uD83C\uDF19'; // moon
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FBF8F4');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        $icon.textContent = '\u2600\uFE0F'; // sun
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0A0A0A');
+      }
+    }
+
+    // Load saved theme
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) {}
+
+    if (saved) {
+      applyTheme(saved);
+    }
+    // else: stays dark (default)
+
+    $toggle.addEventListener('click', function () {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+    });
+  })();
+
   initCategoryPills();
   showOnboarding();
   init();
