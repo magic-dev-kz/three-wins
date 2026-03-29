@@ -49,6 +49,14 @@
   var $monthlyStats = document.getElementById('monthly-stats');
   var $btnMonthlyDismiss = document.getElementById('btn-monthly-dismiss');
 
+  // v9: Progress ring, weekly dots, achievement badges, greeting
+  var $progressRingWrap = document.getElementById('progress-ring-wrap');
+  var $progressRingFill = document.getElementById('progress-ring-fill');
+  var $progressRingValue = document.getElementById('progress-ring-value');
+  var $weeklyDots = document.getElementById('weekly-dots');
+  var $achievementBadges = document.getElementById('achievement-badges');
+  var $greetingHero = document.getElementById('greeting-hero');
+
   // Milestone overlay refs
   var $milestoneOverlay = document.getElementById('milestone-overlay');
   var $milestoneEmoji = document.getElementById('milestone-emoji');
@@ -612,8 +620,13 @@
       updateFlame(streak);
       updateShareButton(streak);
       updateExportButton();
+      updateGreetingHero();
+      updateProgressRing(streak);
+      updateWeeklyDots();
+      updateAchievementBadges(streak);
       triggerBurst();
       triggerCardPulse();
+      triggerStreakCelebrate();
       showSaveToast();
       renderFeed();
       showMilestone(streak);
@@ -1450,6 +1463,151 @@
     } catch (e) {}
   })();
 
+  // === v9: Greeting Hero ===
+  function updateGreetingHero() {
+    if (!$greetingHero) return;
+    var hour = new Date().getHours();
+    var greeting = 'Good evening';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 17) greeting = 'Good afternoon';
+    $greetingHero.textContent = greeting;
+    // Only show if user has entries
+    $greetingHero.style.display = hasAnyEntry() ? 'block' : 'none';
+  }
+
+  // === v9: Progress Ring ===
+  function updateProgressRing(streak) {
+    if (!$progressRingWrap || !$progressRingFill || !$progressRingValue) return;
+    if (streak <= 0) {
+      $progressRingWrap.hidden = true;
+      return;
+    }
+    $progressRingWrap.hidden = false;
+    $progressRingValue.textContent = String(streak);
+
+    // Progress fills based on next milestone target
+    var nextTarget = 7;
+    for (var i = 0; i < MILESTONES.length; i++) {
+      if (streak < MILESTONES[i]) {
+        nextTarget = MILESTONES[i];
+        break;
+      }
+      nextTarget = MILESTONES[i];
+    }
+    var prevTarget = 0;
+    for (var j = MILESTONES.length - 1; j >= 0; j--) {
+      if (MILESTONES[j] < nextTarget && streak >= MILESTONES[j]) {
+        prevTarget = MILESTONES[j];
+        break;
+      }
+    }
+    var range = nextTarget - prevTarget;
+    var progress = range > 0 ? Math.min((streak - prevTarget) / range, 1) : 1;
+    var circumference = 2 * Math.PI * 32; // r=32
+    var offset = circumference * (1 - progress);
+    $progressRingFill.style.strokeDashoffset = String(offset);
+  }
+
+  // === v9: Weekly Progress Dots ===
+  function updateWeeklyDots() {
+    if (!$weeklyDots) return;
+    $weeklyDots.innerHTML = '';
+
+    var dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    var now = new Date();
+    var todayDow = now.getDay(); // 0=Sun
+    // ISO week: Mon=0 ... Sun=6
+    var isoDow = todayDow === 0 ? 6 : todayDow - 1;
+
+    for (var i = 0; i < 7; i++) {
+      var diff = i - isoDow;
+      var d = new Date(now);
+      d.setDate(d.getDate() + diff);
+      var key = formatKey(d);
+      var entry = loadEntry(key);
+
+      var dot = document.createElement('div');
+      dot.className = 'weekly-dot';
+
+      var label = document.createElement('span');
+      label.className = 'weekly-dot__label';
+      label.textContent = dayLabels[i];
+      dot.appendChild(label);
+
+      if (entry) {
+        dot.classList.add('weekly-dot--filled');
+      }
+      if (i === isoDow) {
+        dot.classList.add('weekly-dot--today');
+      }
+
+      $weeklyDots.appendChild(dot);
+    }
+  }
+
+  // === v9: Achievement Badges ===
+  var BADGE_ICONS = {
+    7: '<svg viewBox="0 0 20 20" fill="none"><path d="M10 2L12.5 7.5L18 8.5L14 12.5L15 18L10 15.5L5 18L6 12.5L2 8.5L7.5 7.5L10 2Z" fill="#FF6B35" opacity="0.9"/></svg>',
+    14: '<svg viewBox="0 0 20 20" fill="none"><path d="M10 1C6 1 2 5 2 10C2 16 10 19 10 19C10 19 18 16 18 10C18 5 14 1 10 1Z" fill="#FFB347" opacity="0.9"/><path d="M10 5L11.5 8L14.5 8.5L12.25 10.5L13 13.5L10 12L7 13.5L7.75 10.5L5.5 8.5L8.5 8L10 5Z" fill="#0A0A0F"/></svg>',
+    21: '<svg viewBox="0 0 20 20" fill="none"><rect x="3" y="8" width="14" height="10" rx="2" fill="#FFB347" opacity="0.9"/><path d="M10 2L13 8H7L10 2Z" fill="#FF6B35" opacity="0.9"/><circle cx="10" cy="13" r="2" fill="#0A0A0F"/></svg>',
+    30: '<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" fill="#FFD700" opacity="0.9"/><path d="M10 4L11.5 8H15.5L12 10.5L13.5 14.5L10 12L6.5 14.5L8 10.5L4.5 8H8.5L10 4Z" fill="#0A0A0F"/></svg>',
+    60: '<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" fill="none" stroke="#FFB347" stroke-width="2"/><circle cx="10" cy="10" r="4" fill="#FFB347" opacity="0.9"/><line x1="10" y1="1" x2="10" y2="4" stroke="#FFD700" stroke-width="1.5"/><line x1="10" y1="16" x2="10" y2="19" stroke="#FFD700" stroke-width="1.5"/><line x1="1" y1="10" x2="4" y2="10" stroke="#FFD700" stroke-width="1.5"/><line x1="16" y1="10" x2="19" y2="10" stroke="#FFD700" stroke-width="1.5"/></svg>',
+    90: '<svg viewBox="0 0 20 20" fill="none"><path d="M10 2L7 8H3L6 11L4.5 18L10 14L15.5 18L14 11L17 8H13L10 2Z" fill="#FF6B35" opacity="0.9"/><path d="M10 5L8.5 8.5H5.5L7.5 10.5L6.5 14L10 12L13.5 14L12.5 10.5L14.5 8.5H11.5L10 5Z" fill="#FFD700"/></svg>',
+    100: '<svg viewBox="0 0 20 20" fill="none"><path d="M10 1L12 7H18L13 11L15 17L10 13L5 17L7 11L2 7H8L10 1Z" fill="#FFD700"/><circle cx="10" cy="10" r="3" fill="#FFF8E7"/></svg>',
+    365: '<svg viewBox="0 0 20 20" fill="none"><path d="M4 16L10 2L16 16H4Z" fill="none" stroke="#FFD700" stroke-width="1.5"/><path d="M6 14L10 5L14 14H6Z" fill="#FFD700" opacity="0.9"/><circle cx="10" cy="10" r="2" fill="#FFF8E7"/><path d="M8 16H12L10 19L8 16Z" fill="#FFB347"/></svg>'
+  };
+  var BADGE_LABELS = {
+    7: '7-day streak',
+    14: '14-day streak',
+    21: '21-day streak',
+    30: '30-day streak',
+    60: '60-day streak',
+    90: '90-day streak',
+    100: '100-day streak',
+    365: '365-day streak'
+  };
+
+  function updateAchievementBadges(streak) {
+    if (!$achievementBadges) return;
+    $achievementBadges.innerHTML = '';
+    if (!hasAnyEntry()) return;
+
+    for (var i = 0; i < MILESTONES.length; i++) {
+      var m = MILESTONES[i];
+      var badge = document.createElement('div');
+      badge.className = 'achievement-badge';
+
+      if (streak >= m) {
+        badge.classList.add('achievement-badge--earned');
+      } else {
+        badge.classList.add('achievement-badge--locked');
+      }
+
+      var icon = document.createElement('div');
+      icon.className = 'achievement-badge__icon';
+      icon.innerHTML = BADGE_ICONS[m] || '';
+      badge.appendChild(icon);
+
+      var tooltip = document.createElement('span');
+      tooltip.className = 'achievement-badge__tooltip';
+      tooltip.textContent = BADGE_LABELS[m] || m + ' days';
+      badge.appendChild(tooltip);
+
+      $achievementBadges.appendChild(badge);
+    }
+  }
+
+  // === v9: Celebration Pulse ===
+  function triggerStreakCelebrate() {
+    $streak.classList.remove('streak--celebrate');
+    void $streak.offsetWidth;
+    $streak.classList.add('streak--celebrate');
+    $streak.addEventListener('animationend', function handler() {
+      $streak.removeEventListener('animationend', handler);
+      $streak.classList.remove('streak--celebrate');
+    });
+  }
+
   // === Init ===
 
   var _renderedDateKey = null;
@@ -1485,6 +1643,10 @@
     updateFlame(streak);
     updateShareButton(streak);
     updateExportButton();
+    updateGreetingHero();
+    updateProgressRing(streak);
+    updateWeeklyDots();
+    updateAchievementBadges(streak);
     renderFeed();
     showWeeklyDigest();
     showMonthlySummary();

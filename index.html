@@ -27,6 +27,12 @@
 <div class="onboarding" id="onboarding" role="dialog" aria-modal="true" aria-label="Welcome" hidden>
   <div class="onboarding__card">
     <div class="onboarding__flame" aria-hidden="true">&#x1F525;</div>
+    <div class="onboarding__fire-icon" aria-hidden="true">
+      <div class="ob-flame ob-flame--outer"></div>
+      <div class="ob-flame ob-flame--mid"></div>
+      <div class="ob-flame ob-flame--inner"></div>
+      <div class="ob-flame ob-flame--glow"></div>
+    </div>
     <h1 class="onboarding__title">Three Wins</h1>
     <p class="onboarding__text">
       Write down three good things from your day.<br>
@@ -38,6 +44,9 @@
 </div>
 
 <main class="app" role="main">
+  <!-- v9: Greeting Hero -->
+  <div class="greeting-hero" id="greeting-hero"></div>
+
   <div class="flame-container" id="flame-container" aria-hidden="true">
     <div class="flame" id="flame" data-level="0">
       <div class="flame__layer flame__layer--1"></div>
@@ -48,11 +57,36 @@
     </div>
   </div>
 
+  <!-- v9: Progress Ring -->
+  <div class="progress-ring-wrap" id="progress-ring-wrap" hidden>
+    <svg class="progress-ring" viewBox="0 0 72 72" aria-hidden="true">
+      <defs>
+        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FFB347"/>
+          <stop offset="100%" stop-color="#FF6B35"/>
+        </linearGradient>
+      </defs>
+      <circle class="progress-ring__track" cx="36" cy="36" r="32"/>
+      <circle class="progress-ring__fill" id="progress-ring-fill" cx="36" cy="36" r="32"
+              stroke-dasharray="201.06" stroke-dashoffset="201.06"/>
+    </svg>
+    <div class="progress-ring__label">
+      <span class="progress-ring__value" id="progress-ring-value">0</span>
+      <span class="progress-ring__sublabel">streak</span>
+    </div>
+  </div>
+
+  <!-- v9: Weekly Progress Dots -->
+  <div class="weekly-dots" id="weekly-dots" aria-label="Weekly progress"></div>
+
   <div class="streak" id="streak" aria-live="polite" aria-atomic="true" aria-label="Current streak">
     <span class="streak__count" id="streak-count">0</span>
     <span class="streak__label">day streak</span>
     <span class="streak__badge" id="streak-badge" hidden aria-label="Milestone badge"></span>
   </div>
+
+  <!-- v9: Achievement Badges -->
+  <div class="achievement-badges" id="achievement-badges" aria-label="Achievement badges"></div>
 
   <div class="empty-state" id="empty-state" hidden>
     <p class="empty-state__text">Start your streak.<br>Write your first three wins.</p>

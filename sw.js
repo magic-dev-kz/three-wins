@@ -3,7 +3,7 @@
    localStorage (wins data) lives in the browser and is never touched by SW.
 */
 
-var CACHE_NAME = 'three-wins-v8';
+var CACHE_NAME = 'three-wins-v9';
 var APP_SHELL = [
   './',
   './index.html',

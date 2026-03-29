@@ -1,10 +1,8 @@
 /* ============================================
-   Three Wins — Daily Wins Journal  (v8)
-   Dark-only, mobile-first, CSS flame animation
-   Glassmorphism + Inter + micro-animations
-   Categories, Export, Confetti, Milestones
-   Save animation, enhanced flame, monthly stagger
-   Win Templates, Streak Calendar, Dark mode toggle
+   Three Wins — Daily Wins Journal  (v9)
+   Visual overhaul: warm gradient system, CSS fire,
+   progress ring, weekly dots, achievement badges,
+   spring animations, glassmorphism, Inter
    ============================================ */
 
 /* === Reset & Base === */
@@ -15,7 +13,10 @@
 }
 
 :root {
-  --bg: #08080C;
+  --bg: #0A0A0F;
+  --bg-warm-1: rgba(255, 107, 53, 0.08);
+  --bg-warm-2: rgba(255, 179, 71, 0.05);
+  --bg-warm-3: rgba(255, 69, 0, 0.04);
   --bg-elevated: rgba(22, 22, 30, 0.65);
   --bg-input: rgba(22, 18, 16, 0.7);
   --bg-glass: rgba(255, 255, 255, 0.04);
@@ -23,15 +24,19 @@
   --text-secondary: #8A8078;
   --text-muted: #A89080;
   --orange: #FF6B35;
+  --warm-gold: #FFB347;
   --gold: #FFD700;
   --red-fire: #FF4500;
   --white-hot: #FFF8E7;
+  --ember: #CC4400;
+  --deep-fire: #991100;
   --border: rgba(61, 43, 31, 0.6);
   --border-focus: #FF6B35;
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring-heavy: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --duration-fast: 150ms;
   --duration-med: 300ms;
   --duration-slow: 500ms;
@@ -41,6 +46,13 @@
   --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.3);
   --shadow-glow-orange: 0 4px 32px rgba(255, 107, 53, 0.12);
   --shadow-glow-gold: 0 4px 32px rgba(255, 215, 0, 0.08);
+  --shadow-glow-warm: 0 4px 32px rgba(255, 179, 71, 0.1);
+
+  /* Progress ring */
+  --progress-ring-size: 72px;
+  --progress-ring-stroke: 4px;
+  --progress-ring-track: rgba(255, 255, 255, 0.06);
+  --progress-ring-fill: url(#progressGradient);
 }
 
 html {
@@ -51,16 +63,18 @@ html {
 body {
   background: var(--bg);
   background-image:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 107, 53, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 30% 100%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255, 69, 0, 0.03) 0%, transparent 50%);
+    radial-gradient(ellipse 90% 60% at 50% -10%, var(--bg-warm-1) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 20% 100%, var(--bg-warm-2) 0%, transparent 45%),
+    radial-gradient(ellipse 50% 40% at 85% 75%, var(--bg-warm-3) 0%, transparent 40%),
+    radial-gradient(circle 400px at 50% 50%, rgba(255, 179, 71, 0.02) 0%, transparent 100%);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-sans);
   display: flex;
   justify-content: center;
   min-height: 100dvh;
   padding: 24px 16px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* === Screen reader only === */
@@ -516,12 +530,12 @@ body {
   font-size: 56px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  background: linear-gradient(180deg, #FFD700 10%, #FF6B35 90%);
+  background: linear-gradient(180deg, var(--warm-gold) 10%, var(--orange) 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-variant-numeric: tabular-nums;
-  filter: drop-shadow(0 2px 12px rgba(255, 107, 53, 0.3));
+  filter: drop-shadow(0 2px 12px rgba(255, 179, 71, 0.3));
 }
 
 .streak__label {
@@ -847,12 +861,23 @@ body {
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-radius: 18px;
   border: 1px solid var(--glass-border);
-  border-left: 3px solid var(--orange);
+  border-left: none;
   animation: feed-fade-in var(--duration-slow) var(--ease-out) both;
   transition: transform var(--duration-med) var(--ease-out),
-              box-shadow var(--duration-med) var(--ease-out),
-              border-color var(--duration-med) var(--ease-out);
+              box-shadow var(--duration-med) var(--ease-out);
   box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.feed__entry::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--warm-gold), var(--orange));
 }
 
 .feed__entry:hover {
@@ -862,14 +887,7 @@ body {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-.feed__date {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 600;
-  margin-bottom: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
+/* v9: feed__date moved to bottom of file with enhanced styling */
 
 .feed__wins {
   list-style: none;
@@ -878,14 +896,7 @@ body {
   gap: 10px;
 }
 
-.feed__win {
-  font-size: 15px;
-  color: var(--text-primary);
-  padding-left: 18px;
-  position: relative;
-  line-height: 1.55;
-  font-weight: 400;
-}
+/* v9: feed__win moved to bottom of file with enhanced styling */
 
 .feed__win::before {
   content: '';
@@ -907,7 +918,7 @@ body {
 @keyframes feed-fade-in {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.98);
+    transform: translateY(20px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -1187,7 +1198,7 @@ body {
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-radius: 16px;
   border: 1px solid var(--glass-border);
-  border-left: 3px solid var(--orange);
+  border-left: 3px solid var(--warm-gold);
   box-shadow: var(--shadow-soft);
   transition: transform var(--duration-med) var(--ease-out),
               box-shadow var(--duration-med) var(--ease-out);
@@ -1556,16 +1567,19 @@ button:focus-visible {
   font-size: 56px;
   line-height: 1;
   filter: drop-shadow(0 4px 16px rgba(255, 107, 53, 0.3));
+  display: none; /* v9: replaced by CSS fire */
 }
 
 .onboarding__title {
   font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  background: linear-gradient(180deg, #FFD700, #FF6B35);
+  background: linear-gradient(135deg, var(--warm-gold) 0%, var(--orange) 50%, var(--gold) 100%);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradient-shift 6s ease-in-out infinite;
 }
 
 .onboarding__text {
@@ -1937,6 +1951,9 @@ button:focus-visible {
    ============================================ */
 [data-theme="light"] {
   --bg: #FBF8F4;
+  --bg-warm-1: rgba(232, 90, 42, 0.05);
+  --bg-warm-2: rgba(212, 162, 0, 0.04);
+  --bg-warm-3: rgba(208, 58, 0, 0.03);
   --bg-elevated: rgba(255, 255, 255, 0.75);
   --bg-input: rgba(245, 240, 235, 0.8);
   --bg-glass: rgba(255, 255, 255, 0.25);
@@ -1944,15 +1961,20 @@ button:focus-visible {
   --text-secondary: #8A7E74;
   --text-muted: #A09080;
   --orange: #E85A2A;
+  --warm-gold: #D4960A;
   --gold: #D4A200;
   --red-fire: #D03A00;
   --white-hot: #FFF8E7;
+  --ember: #B03800;
+  --deep-fire: #801000;
   --border: rgba(180, 160, 140, 0.4);
   --border-focus: #E85A2A;
   --glass-border: rgba(180, 160, 140, 0.25);
   --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.08);
   --shadow-glow-orange: 0 4px 32px rgba(232, 90, 42, 0.1);
   --shadow-glow-gold: 0 4px 32px rgba(212, 162, 0, 0.06);
+  --shadow-glow-warm: 0 4px 32px rgba(212, 150, 10, 0.08);
+  --progress-ring-track: rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] body {
@@ -2205,6 +2227,340 @@ button:focus-visible {
 
 .streak-cal-cell--future {
   opacity: 0.3;
+}
+
+/* ============================================
+   v9: Win Entry Slide-in Animation
+   ============================================ */
+@keyframes win-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px) scale(0.96);
+  }
+  60% {
+    transform: translateX(4px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.feed__entry--new {
+  animation: win-slide-in 0.6s var(--ease-spring-heavy) both;
+}
+
+/* v9: Celebration pulse on streak milestones */
+@keyframes celebration-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 179, 71, 0.4); }
+  40%  { box-shadow: 0 0 0 12px rgba(255, 179, 71, 0.15); }
+  70%  { box-shadow: 0 0 0 20px rgba(255, 179, 71, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 179, 71, 0); }
+}
+
+.streak--celebrate {
+  animation: celebration-pulse 1s var(--ease-out);
+}
+
+/* ============================================
+   v9: Streak Progress Ring (SVG)
+   ============================================ */
+.progress-ring-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.progress-ring {
+  width: var(--progress-ring-size);
+  height: var(--progress-ring-size);
+  transform: rotate(-90deg);
+}
+
+.progress-ring__track {
+  fill: none;
+  stroke: var(--progress-ring-track);
+  stroke-width: var(--progress-ring-stroke);
+}
+
+.progress-ring__fill {
+  fill: none;
+  stroke: url(#progressGradient);
+  stroke-width: var(--progress-ring-stroke);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s var(--ease-out);
+}
+
+.progress-ring__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.progress-ring__value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(180deg, var(--warm-gold) 0%, var(--orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.progress-ring__sublabel {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+/* ============================================
+   v9: Weekly Progress Dots (Mon-Sun)
+   ============================================ */
+.weekly-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.weekly-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s var(--ease-spring);
+  position: relative;
+}
+
+.weekly-dot--filled {
+  background: var(--orange);
+  border-color: var(--orange);
+  box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+}
+
+.weekly-dot--today {
+  border-color: var(--warm-gold);
+  box-shadow: 0 0 6px rgba(255, 179, 71, 0.3);
+}
+
+.weekly-dot--today.weekly-dot--filled {
+  background: linear-gradient(135deg, var(--orange), var(--warm-gold));
+  border-color: var(--warm-gold);
+  box-shadow: 0 0 10px rgba(255, 179, 71, 0.5);
+}
+
+.weekly-dot__label {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ============================================
+   v9: Achievement Badges (visual upgrade)
+   ============================================ */
+.achievement-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.achievement-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease-out);
+}
+
+.achievement-badge--earned {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(255, 179, 71, 0.1));
+  border: 1.5px solid rgba(255, 179, 71, 0.3);
+  box-shadow: 0 2px 12px rgba(255, 107, 53, 0.15);
+}
+
+.achievement-badge--earned:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+}
+
+.achievement-badge--locked {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px dashed rgba(255, 255, 255, 0.08);
+  opacity: 0.4;
+}
+
+.achievement-badge__icon {
+  width: 20px;
+  height: 20px;
+}
+
+.achievement-badge__tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: rgba(20, 18, 16, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s var(--ease-spring);
+  z-index: 10;
+}
+
+.achievement-badge:hover .achievement-badge__tooltip {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* ============================================
+   v9: Gradient Hero Text
+   ============================================ */
+.greeting-hero {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, var(--warm-gold) 0%, var(--orange) 50%, var(--gold) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 6s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ============================================
+   v9: Onboarding CSS Fire (replaces emoji)
+   ============================================ */
+.onboarding__fire-icon {
+  width: 64px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 4px 20px rgba(255, 107, 53, 0.4));
+}
+
+.onboarding__fire-icon .ob-flame {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+.onboarding__fire-icon .ob-flame--outer {
+  width: 48px;
+  height: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--deep-fire) 0%, var(--red-fire) 25%, var(--orange) 50%, var(--warm-gold) 80%, rgba(255, 248, 231, 0.6) 100%);
+  opacity: 0.95;
+  animation: flame-dance 1.2s ease-in-out infinite;
+}
+
+.onboarding__fire-icon .ob-flame--mid {
+  width: 32px;
+  height: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--orange) 0%, var(--warm-gold) 50%, var(--white-hot) 100%);
+  opacity: 0.8;
+  animation: flame-dance 1s ease-in-out infinite 0.15s;
+}
+
+.onboarding__fire-icon .ob-flame--inner {
+  width: 18px;
+  height: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--gold) 0%, var(--white-hot) 60%, #FFFFFF 100%);
+  opacity: 0.7;
+  animation: flame-dance 0.9s ease-in-out infinite 0.3s;
+}
+
+.onboarding__fire-icon .ob-flame--glow {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 107, 53, 0.3) 0%, transparent 70%);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   v9: Enhanced Feed Date Headers
+   ============================================ */
+.feed__date {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.feed__date::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), transparent);
+  border-radius: 1px;
+}
+
+/* v9: Feed win text refinements */
+.feed__win {
+  font-size: 15px;
+  color: var(--text-primary);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.65;
+  font-weight: 400;
+  letter-spacing: 0.005em;
 }
 
 .oc-footer{text-align:center;padding:20px 16px 24px;margin-top:24px}

@@ -1,5 +1,22 @@
 # Three Wins — Changelog
 
+## v9.0 (2026-03-29)
+### Visual Overhaul
+- **Warm gradient color system** — body uses layered warm radial gradients (fire orange, warm gold, ember) with `background-attachment: fixed`; new CSS variables `--warm-gold: #FFB347`, `--ember`, `--deep-fire`, `--bg-warm-*`, `--shadow-glow-warm`, `--ease-spring-heavy`
+- **Custom CSS fire animation** — onboarding fire emoji replaced with pure CSS animated flame (3-layer gradient with flicker keyframes + glow); fire emoji hidden via `display: none`
+- **Greeting hero** — time-of-day gradient text greeting ("Good morning / afternoon / evening") with animated `background-size` shimmer; hidden when no entries exist
+- **Streak progress ring** — SVG circle with gradient fill (`#FFB347` to `#FF6B35`) showing progress toward next milestone; stroke-dashoffset animated on streak change; hidden when streak is 0
+- **Weekly progress dots** — 7 dots (Mon-Sun) with day labels; filled orange for days with entries, gold border for today; updates on save
+- **Achievement badges** — 8 SVG icon badges (one per milestone: 7, 14, 21, 30, 60, 90, 100, 365 days); earned badges glow with gradient background and scale on hover with tooltip; locked badges show dashed border at reduced opacity
+- **Win entry animations** — `win-slide-in` keyframe with spring curve on new feed entries; `celebration-pulse` ring animation on streak counter after saving
+- **Feed card polish** — left border upgraded to warm-gold-to-orange gradient via `border-image`; date headers refined to 11px/700wt with orange underline accent; win text line-height increased to 1.65
+- **Typography upgrades** — onboarding title uses animated gradient shift; streak count gradient uses `--warm-gold`; feed fade-in animation enhanced with deeper translate
+- **Light mode support** — all new CSS variables (`--warm-gold`, `--ember`, `--deep-fire`, `--bg-warm-*`, `--shadow-glow-warm`, `--progress-ring-track`) added to `[data-theme="light"]`
+
+### Changed
+- CSS comment header updated to v9
+- SW cache bumped to `three-wins-v9`
+
 ## v8.0 (2026-03-29)
 ### Added
 - **Win Templates** — 5 clickable prompt chips above the win inputs: "What went well at work?", "What made you smile?", "What did you learn?", "What are you grateful for?", "What challenge did you overcome?". Clicking fills the first empty input with the prompt text. Chips hidden in saved/readonly state, shown again on edit.
