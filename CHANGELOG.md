@@ -1,5 +1,12 @@
 # Three Wins — Changelog
 
+## v10.0 (2026-03-29)
+- Win input placeholders more helpful ("What went well today?", "Another win...", "One more thing...")
+- Feed card hover glow stronger for better visual feedback
+- Service worker cache bumped to `three-wins-v10`
+
+---
+
 ## v9.0 (2026-03-29)
 ### Visual Overhaul
 - **Warm gradient color system** — body uses layered warm radial gradients (fire orange, warm gold, ember) with `background-attachment: fixed`; new CSS variables `--warm-gold: #FFB347`, `--ember`, `--deep-fire`, `--bg-warm-*`, `--shadow-glow-warm`, `--ease-spring-heavy`
