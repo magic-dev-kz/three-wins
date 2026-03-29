@@ -1,8 +1,9 @@
 /* ============================================
-   Three Wins — Daily Wins Journal  (v9)
+   Three Wins — Daily Wins Journal  (v12)
    Visual overhaul: warm gradient system, CSS fire,
    progress ring, weekly dots, achievement badges,
    spring animations, glassmorphism, Inter
+   v12: Seasonal themes, last-year wins, streak chime
    ============================================ */
 
 /* === Reset & Base === */
@@ -2562,6 +2563,93 @@ button:focus-visible {
   line-height: 1.65;
   font-weight: 400;
   letter-spacing: 0.005em;
+}
+
+/* ============================================
+   v12: Seasonal Theme Accent Override
+   ============================================ */
+[data-season="spring"] .streak__count,
+[data-season="spring"] .feed__date::after {
+  color: var(--seasonal-accent, #34D399);
+  background: var(--seasonal-accent, #34D399);
+}
+[data-season="spring"] .btn--done {
+  border-color: var(--seasonal-accent, #34D399);
+}
+[data-season="summer"] .streak__count,
+[data-season="summer"] .feed__date::after {
+  color: var(--seasonal-accent, #FBBF24);
+  background: var(--seasonal-accent, #FBBF24);
+}
+[data-season="summer"] .btn--done {
+  border-color: var(--seasonal-accent, #FBBF24);
+}
+[data-season="autumn"] .streak__count,
+[data-season="autumn"] .feed__date::after {
+  color: var(--seasonal-accent, #FB923C);
+  background: var(--seasonal-accent, #FB923C);
+}
+[data-season="autumn"] .btn--done {
+  border-color: var(--seasonal-accent, #FB923C);
+}
+[data-season="winter"] .streak__count,
+[data-season="winter"] .feed__date::after {
+  color: var(--seasonal-accent, #60A5FA);
+  background: var(--seasonal-accent, #60A5FA);
+}
+[data-season="winter"] .btn--done {
+  border-color: var(--seasonal-accent, #60A5FA);
+}
+
+/* ============================================
+   v12: "This Time Last Year" card
+   ============================================ */
+.last-year-wins {
+  margin: 16px 0;
+  padding: 16px 20px;
+  background: var(--bg-elevated, rgba(22, 22, 30, 0.65));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--seasonal-accent, var(--warm-gold, #FFB347));
+  border-radius: 12px;
+  animation: win-slide-in var(--duration-slow, 500ms) var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+.last-year-wins__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+.last-year-wins__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.last-year-wins__item {
+  font-size: 14px;
+  color: var(--text-primary);
+  padding: 4px 0 4px 16px;
+  position: relative;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.last-year-wins__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--seasonal-accent, var(--warm-gold, #FFB347));
+  opacity: 0.6;
+}
+
+[data-theme="light"] .last-year-wins {
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .oc-footer{text-align:center;padding:20px 16px 24px;margin-top:24px}

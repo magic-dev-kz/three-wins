@@ -1,5 +1,17 @@
 # Three Wins — Changelog
 
+## v12.0 (2026-03-29)
+
+### Added
+- **Win streak chime** -- soft C5 sine wave chime (200ms, Web Audio API) plays on save when streak > 3 days
+- **Seasonal themes** -- auto-detects season (spring/summer/autumn/winter) and subtly tints accent colors (streak count, feed date markers, done button border)
+- **"This time last year"** -- after saving, shows wins from the same date one year ago (if any) in a styled card above the feed
+
+### Technical
+- Service worker cache bumped to `three-wins-v12`
+
+---
+
 ## v11.0 (2026-03-29)
 - Onboarding fire icon larger (80x100) with stronger dual-layer glow
 - Feed card left border color now tints by category (`--cat-color`)

@@ -631,6 +631,14 @@
       renderFeed();
       showMilestone(streak);
 
+      // v12: Win streak chime when streak > 3
+      if (streak > 3) {
+        playWinChime();
+      }
+
+      // v12: Show "this time last year" wins
+      showLastYearWins();
+
       // Show reflection prompt if all 3 wins are filled
       var allFilled = wins.every(function (w) { return w.length > 0; });
       if (allFilled) {
@@ -1650,6 +1658,8 @@
     renderFeed();
     showWeeklyDigest();
     showMonthlySummary();
+    // v12: Show last year's wins on load
+    showLastYearWins();
   }
 
   document.addEventListener('visibilitychange', function () {
@@ -1789,6 +1799,77 @@
       if (window._renderStreakCalendar) window._renderStreakCalendar();
     }, 100);
   });
+
+  // === v12: Win Streak Chime (Web Audio API) ===
+  function playWinChime() {
+    try {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      var ctx = new AudioCtx();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.2);
+      osc.onended = function() { ctx.close(); };
+    } catch(e) {}
+  }
+
+  // === v12: Seasonal Themes ===
+  (function initSeasonalTheme() {
+    var month = new Date().getMonth(); // 0-11
+    var season, accent;
+    if (month >= 2 && month <= 4) { season = 'spring'; accent = '#34D399'; }
+    else if (month >= 5 && month <= 7) { season = 'summer'; accent = '#FBBF24'; }
+    else if (month >= 8 && month <= 10) { season = 'autumn'; accent = '#FB923C'; }
+    else { season = 'winter'; accent = '#60A5FA'; }
+    document.documentElement.style.setProperty('--seasonal-accent', accent);
+    document.documentElement.setAttribute('data-season', season);
+  })();
+
+  // === v12: "This Time Last Year" ===
+  function showLastYearWins() {
+    var today = todayKey();
+    var parts = today.split('-');
+    var lastYearKey = (parseInt(parts[0], 10) - 1) + '-' + parts[1] + '-' + parts[2];
+    var lastYearEntry = loadEntry(lastYearKey);
+
+    // Remove existing last-year element
+    var existing = document.getElementById('last-year-wins');
+    if (existing) existing.remove();
+
+    if (!lastYearEntry) return;
+    var wins = lastYearEntry.wins.filter(function(w) { return w && w.trim(); });
+    if (wins.length === 0) return;
+
+    var wrap = document.createElement('div');
+    wrap.id = 'last-year-wins';
+    wrap.className = 'last-year-wins';
+    var title = document.createElement('div');
+    title.className = 'last-year-wins__title';
+    title.textContent = 'This time last year';
+    wrap.appendChild(title);
+
+    var ul = document.createElement('ul');
+    ul.className = 'last-year-wins__list';
+    wins.forEach(function(w) {
+      var li = document.createElement('li');
+      li.className = 'last-year-wins__item';
+      li.textContent = w;
+      ul.appendChild(li);
+    });
+    wrap.appendChild(ul);
+
+    // Insert before the feed section
+    if ($feed) {
+      $feed.parentNode.insertBefore(wrap, $feed);
+    }
+  }
 
   // === v8: Dark Mode Toggle ===
   (function initDarkMode() {
