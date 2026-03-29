@@ -553,6 +553,30 @@
     if (existing) existing.remove();
   }
 
+  // v6: Save toast
+  var $saveToast = document.getElementById('save-toast');
+  var _saveToastTimer = null;
+
+  function showSaveToast() {
+    if (_saveToastTimer) { clearTimeout(_saveToastTimer); }
+    $saveToast.classList.add('show');
+    _saveToastTimer = setTimeout(function () {
+      $saveToast.classList.remove('show');
+      _saveToastTimer = null;
+    }, 2000);
+  }
+
+  // v6: Card pulse animation on save
+  function triggerCardPulse() {
+    $form.classList.remove('wins--saved');
+    void $form.offsetWidth;
+    $form.classList.add('wins--saved');
+    $form.addEventListener('animationend', function handler() {
+      $form.removeEventListener('animationend', handler);
+      $form.classList.remove('wins--saved');
+    });
+  }
+
   $form.addEventListener('submit', function (e) {
     e.preventDefault();
     clearSaveError();
@@ -582,6 +606,8 @@
       updateShareButton(streak);
       updateExportButton();
       triggerBurst();
+      triggerCardPulse();
+      showSaveToast();
       renderFeed();
       showMilestone(streak);
 

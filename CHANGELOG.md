@@ -1,5 +1,30 @@
 # Three Wins — Changelog
 
+## v6.0 (2026-03-29)
+### Win Save Animation
+- Card pulse animation (`card-pulse`) triggers on the wins form when saving 3 wins
+- "Wins saved!" success toast slides up from the bottom with glassmorphism styling
+- Toast auto-dismisses after 2 seconds; orange/gold glow border accent
+
+### Enhanced Streak Flame Glow
+- Brighter `glow-pulse-bright` animation on flame glow for streak levels 3, 4, and 5 (streak > 7 days)
+- Pseudo-element radial gradient underlight added beneath levels 3 and 4 flames
+- Glow scales up 1.2x and brightness increases 1.5x at peak pulse
+
+### Focus-Visible Accessibility
+- `:focus-visible` outlines (2px solid orange) on all interactive elements
+- Custom ring styles per element type: gold ring for Done/Edit/reflection buttons, white ring for overlay buttons
+- Input fields suppress outline in favor of existing focus border styling
+- Category pills get an additional `box-shadow` focus ring for clarity
+
+### Monthly Summary Staggered Fade-In
+- `stat-count-in` keyframe animation with scale + translateY entrance on each stat card
+- Staggered delays: 150ms, 300ms, 450ms for the three stat cards
+- Title fades in at 50ms, dismiss button at 550ms for a sequential reveal
+
+### Changed
+- SW cache bumped to `three-wins-v7`
+
 ## v5.0 (2026-03-29)
 ### Reflection Prompt
 - After saving all 3 wins, an optional "What made today great?" textarea appears (max 200 chars)
