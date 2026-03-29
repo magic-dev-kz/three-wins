@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Wins</title>
+<meta name="description" content="Three things. Every day. That's it.">
+<meta name="theme-color" content="#0A0A0A">
+<meta property="og:title" content="Three Wins — Daily Win Tracker">
+<meta property="og:description" content="Write 3 wins every day. Build a streak. Share your fire. Free, private, offline.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://magic-dev-kz.github.io/three-wins/">
+<link rel="canonical" href="https://magic-dev-kz.github.io/three-wins/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Three Wins — Daily Win Tracker">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<div class="onboarding" id="onboarding" role="dialog" aria-modal="true" aria-label="Welcome" hidden>
+  <div class="onboarding__card">
+    <div class="onboarding__flame" aria-hidden="true">&#x1F525;</div>
+    <h1 class="onboarding__title">Three Wins</h1>
+    <p class="onboarding__text">
+      Write down three good things from your day.<br>
+      Every day. Build a streak. Watch the flame grow.<br>
+      No accounts. No cloud. Just you and your wins.
+    </p>
+    <button class="onboarding__cta" id="onboarding-start" autofocus>Start</button>
+  </div>
+</div>
+
+<main class="app" role="main">
+  <div class="flame-container" id="flame-container" aria-hidden="true">
+    <div class="flame" id="flame" data-level="0">
+      <div class="flame__layer flame__layer--1"></div>
+      <div class="flame__layer flame__layer--2"></div>
+      <div class="flame__layer flame__layer--3"></div>
+      <div class="flame__layer flame__layer--4"></div>
+      <div class="flame__glow"></div>
+    </div>
+  </div>
+
+  <div class="streak" id="streak" aria-live="polite" aria-atomic="true" aria-label="Current streak">
+    <span class="streak__count" id="streak-count">0</span>
+    <span class="streak__label">day streak</span>
+    <span class="streak__badge" id="streak-badge" hidden aria-label="Milestone badge"></span>
+  </div>
+
+  <div class="empty-state" id="empty-state" hidden>
+    <p class="empty-state__text">Start your streak.<br>Write your first three wins.</p>
+  </div>
+
+  <time class="date" id="date" datetime=""></time>
+
+  <form class="wins" id="wins-form" aria-label="Today's three wins">
+    <div class="wins__field">
+      <label for="win-1" class="sr-only">Win number 1</label>
+      <input type="text" id="win-1" class="wins__input" placeholder="Win #1" maxlength="200" autocomplete="off" aria-label="Win number 1">
+      <div class="category-pills" data-for="win-1" aria-label="Category for win 1">
+        <button type="button" class="cat-pill" data-cat="Work">Work</button>
+        <button type="button" class="cat-pill" data-cat="Health">Health</button>
+        <button type="button" class="cat-pill" data-cat="Relationships">Relationships</button>
+        <button type="button" class="cat-pill" data-cat="Learning">Learning</button>
+        <button type="button" class="cat-pill" data-cat="Creative">Creative</button>
+        <button type="button" class="cat-pill" data-cat="Personal">Personal</button>
+      </div>
+    </div>
+    <div class="wins__field">
+      <label for="win-2" class="sr-only">Win number 2</label>
+      <input type="text" id="win-2" class="wins__input" placeholder="Win #2" maxlength="200" autocomplete="off" aria-label="Win number 2">
+      <div class="category-pills" data-for="win-2" aria-label="Category for win 2">
+        <button type="button" class="cat-pill" data-cat="Work">Work</button>
+        <button type="button" class="cat-pill" data-cat="Health">Health</button>
+        <button type="button" class="cat-pill" data-cat="Relationships">Relationships</button>
+        <button type="button" class="cat-pill" data-cat="Learning">Learning</button>
+        <button type="button" class="cat-pill" data-cat="Creative">Creative</button>
+        <button type="button" class="cat-pill" data-cat="Personal">Personal</button>
+      </div>
+    </div>
+    <div class="wins__field">
+      <label for="win-3" class="sr-only">Win number 3</label>
+      <input type="text" id="win-3" class="wins__input" placeholder="Win #3" maxlength="200" autocomplete="off" aria-label="Win number 3">
+      <div class="category-pills" data-for="win-3" aria-label="Category for win 3">
+        <button type="button" class="cat-pill" data-cat="Work">Work</button>
+        <button type="button" class="cat-pill" data-cat="Health">Health</button>
+        <button type="button" class="cat-pill" data-cat="Relationships">Relationships</button>
+        <button type="button" class="cat-pill" data-cat="Learning">Learning</button>
+        <button type="button" class="cat-pill" data-cat="Creative">Creative</button>
+        <button type="button" class="cat-pill" data-cat="Personal">Personal</button>
+      </div>
+    </div>
+
+    <div class="wins__actions">
+      <button type="submit" class="btn btn--done" id="btn-done" disabled aria-label="Save today's wins">Done</button>
+      <button type="button" class="btn btn--edit" id="btn-edit" hidden aria-label="Edit today's wins">Edit</button>
+    </div>
+  </form>
+
+  <div class="reflection-wrap" id="reflection-wrap" hidden>
+    <div class="reflection-card">
+      <label for="reflection-input" class="reflection-label">What made today great?</label>
+      <textarea id="reflection-input" class="reflection-textarea" maxlength="200" placeholder="Optional reflection..." aria-label="Reflection on your day"></textarea>
+      <div class="reflection-footer">
+        <span class="reflection-counter" id="reflection-counter">0/200</span>
+        <button type="button" class="btn btn--reflection-save" id="btn-reflection-save">Save Reflection</button>
+        <button type="button" class="btn--reflection-skip" id="btn-reflection-skip">Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-wrap" id="share-wrap" hidden>
+    <button type="button" class="btn--share" id="btn-share" aria-label="Share today's wins as an image card">Share Today's Wins</button>
+  </div>
+
+  <div class="export-wrap" id="export-wrap">
+    <button type="button" class="btn--export" id="btn-export" aria-label="Export all wins as text file">Export Wins</button>
+  </div>
+
+  <div class="monthly-summary" id="monthly-summary" hidden>
+    <div class="monthly-summary__card">
+      <h2 class="monthly-summary__title" id="monthly-title"></h2>
+      <div class="monthly-summary__stats" id="monthly-stats"></div>
+      <button type="button" class="btn--monthly-dismiss" id="btn-monthly-dismiss">Got it</button>
+    </div>
+  </div>
+
+  <section class="feed" id="feed" aria-label="Past wins">
+    <h2 class="sr-only">Past entries</h2>
+  </section>
+</main>
+
+<div class="milestone-overlay" id="milestone-overlay" role="dialog" aria-modal="true" aria-label="Milestone celebration" hidden>
+  <div class="milestone-overlay__card">
+    <div class="confetti-container" id="confetti-container" aria-hidden="true"></div>
+    <div class="milestone-overlay__emoji" id="milestone-emoji" aria-hidden="true"></div>
+    <h2 class="milestone-overlay__title" id="milestone-title"></h2>
+    <p class="milestone-overlay__subtitle" id="milestone-subtitle">Keep the fire burning</p>
+    <button class="milestone-overlay__btn" id="milestone-continue" autofocus>Continue</button>
+  </div>
+</div>
+
+<div class="digest-overlay" id="digest-overlay" role="dialog" aria-modal="true" aria-label="Weekly wins digest" hidden>
+  <div class="digest-overlay__card">
+    <h2 class="digest-overlay__title" id="digest-title"></h2>
+    <div class="digest-overlay__stats" id="digest-stats"></div>
+    <div id="digest-days"></div>
+    <div class="digest-overlay__actions">
+      <button class="digest-overlay__btn digest-overlay__btn--share" id="digest-share">Share Weekly Card</button>
+      <button class="digest-overlay__btn digest-overlay__btn--done" id="digest-done">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>
