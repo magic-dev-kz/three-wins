@@ -686,6 +686,58 @@
     $inputs[0].focus();
   });
 
+  // === v15: Random Win Prompt (inspiration hint after 10s idle) ===
+  var _inspirationPrompts = [
+    'What made you laugh today?',
+    'What small win did you have?',
+    'Who made your day better?',
+    'What did you learn today?',
+    'What are you grateful for right now?',
+    'What obstacle did you overcome?',
+    'What healthy choice did you make?',
+    'What moment brought you joy?',
+    'What progress did you make on a goal?',
+    'What kindness did you show or receive?'
+  ];
+  var _inspirationTimer = null;
+  var _inspirationEl = null;
+
+  function showInspirationHint() {
+    if (_inspirationEl) return;
+    var allEmpty = $inputs.every(function(inp) { return !inp.value.trim(); });
+    if (!allEmpty) return;
+    var anyReadonly = $inputs.some(function(inp) { return inp.readOnly; });
+    if (anyReadonly) return;
+    var prompt = _inspirationPrompts[Math.floor(Math.random() * _inspirationPrompts.length)];
+    _inspirationEl = document.createElement('div');
+    _inspirationEl.className = 'inspiration-hint';
+    _inspirationEl.setAttribute('role', 'status');
+    _inspirationEl.innerHTML = '\u{1F4A1} Need inspiration? Try: <em>' + prompt + '</em>';
+    _inspirationEl.style.cssText = 'font-size:.8rem;color:var(--muted,#999);padding:8px 12px;margin-top:8px;opacity:0;transition:opacity .5s ease;text-align:center;';
+    $form.appendChild(_inspirationEl);
+    requestAnimationFrame(function() { _inspirationEl.style.opacity = '1'; });
+  }
+
+  function hideInspirationHint() {
+    if (_inspirationEl) { _inspirationEl.remove(); _inspirationEl = null; }
+    clearTimeout(_inspirationTimer);
+  }
+
+  function resetInspirationTimer() {
+    hideInspirationHint();
+    var allEmpty = $inputs.every(function(inp) { return !inp.value.trim(); });
+    if (allEmpty) {
+      _inspirationTimer = setTimeout(showInspirationHint, 10000);
+    }
+  }
+
+  $inputs.forEach(function(inp) {
+    inp.addEventListener('input', resetInspirationTimer);
+    inp.addEventListener('focus', resetInspirationTimer);
+  });
+  // Start timer on load if in edit state
+  resetInspirationTimer();
+
   // === Reflection Prompt ===
   function showReflectionPrompt() {
     var entry = loadEntry(todayKey());

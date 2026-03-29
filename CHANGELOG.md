@@ -1,5 +1,18 @@
 # Three Wins — Changelog
 
+## v15.0 (2026-03-29) — Random Win Prompt
+
+### Added
+- **Random win prompt** -- if all three win fields are empty and user hasn't typed for 10 seconds, a subtle hint appears: "Need inspiration? Try: [random prompt]"
+- 10 built-in prompts (e.g., "What made you laugh today?", "What small win did you have?", "Who made your day better?")
+- Hint disappears when user starts typing; reappears after 10s of inactivity if fields remain empty
+- Non-intrusive: small text below the form, fades in with CSS transition
+
+### Technical
+- Service worker cache bumped to `three-wins-v15`
+
+---
+
 ## v14.0 (2026-03-29) — Streak Freeze
 
 ### Added
