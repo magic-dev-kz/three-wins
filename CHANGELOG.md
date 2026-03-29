@@ -1,5 +1,9 @@
 # Three Wins — Changelog
 
+## v16.0 (2026-03-29) — Streak Record Badge
+
+- **Streak Record Badge**: "New record!" flash notification when current streak surpasses personal best
+- SW cache bumped to `three-wins-v16`
 ## v15.0 (2026-03-29) — Random Win Prompt
 
 ### Added

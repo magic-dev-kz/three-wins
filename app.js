@@ -663,6 +663,21 @@
       renderFeed();
       showMilestone(streak);
 
+      // v16: Streak record badge — "New record!" flash
+      (function checkStreakRecord(s) {
+        var RECORD_KEY = STORAGE_PREFIX + 'streakRecord';
+        var prev = 0;
+        try { prev = parseInt(localStorage.getItem(RECORD_KEY), 10) || 0; } catch(e) {}
+        if (s > prev && s > 1) {
+          try { localStorage.setItem(RECORD_KEY, String(s)); } catch(e) {}
+          var badge = document.createElement('div');
+          badge.textContent = 'New record!';
+          badge.style.cssText = 'position:fixed;top:18%;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#1A1A1A;font-weight:800;font-size:1rem;padding:8px 20px;border-radius:12px;z-index:9999;box-shadow:0 4px 20px rgba(251,191,36,0.4);animation:streakRecordFlash 2s ease-out forwards;pointer-events:none;';
+          document.body.appendChild(badge);
+          setTimeout(function() { if (badge.parentNode) badge.parentNode.removeChild(badge); }, 2200);
+        }
+      })(streak);
+
       // v12: Win streak chime when streak > 3
       if (streak > 3) {
         playWinChime();

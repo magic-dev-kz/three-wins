@@ -2712,6 +2712,9 @@ button:focus-visible {
   background: rgba(255, 255, 255, 0.7);
 }
 
+/* v16: Streak record flash */
+@keyframes streakRecordFlash{0%{opacity:0;transform:translateX(-50%) scale(0.7) translateY(10px)}15%{opacity:1;transform:translateX(-50%) scale(1.1) translateY(0)}30%{transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
+
 .oc-footer{text-align:center;padding:20px 16px 24px;margin-top:24px}
 .oc-footer a{font-size:.78rem;color:var(--text-muted,var(--text-secondary,#888));text-decoration:none;opacity:.6;transition:opacity .2s}
 .oc-footer a:hover{opacity:1}
