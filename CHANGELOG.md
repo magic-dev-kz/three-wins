@@ -1,5 +1,14 @@
 # Three Wins — Changelog
 
+## v17.0 (2026-03-29) — Accessibility Pass
+
+- **Skip link**: Hidden skip-to-content link appears on Tab for keyboard users, jumps to wins form
+- **Win inputs aria-label**: Simplified to "Win 1", "Win 2", "Win 3" for cleaner screen reader announcements
+- **Save button aria-label**: Save button already has descriptive aria-label "Save today's wins" (preserved)
+- SW cache bumped to `three-wins-v17`
+
+---
+
 ## v16.0 (2026-03-29) — Streak Record Badge
 
 - **Streak Record Badge**: "New record!" flash notification when current streak surpasses personal best
