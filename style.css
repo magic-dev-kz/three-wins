@@ -877,7 +877,7 @@ body {
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(to bottom, var(--warm-gold), var(--orange));
+  background: linear-gradient(to bottom, var(--cat-color, var(--warm-gold)), color-mix(in srgb, var(--cat-color, var(--orange)) 80%, transparent));
 }
 
 .feed__entry:hover {
@@ -2470,13 +2470,13 @@ button:focus-visible {
    v9: Onboarding CSS Fire (replaces emoji)
    ============================================ */
 .onboarding__fire-icon {
-  width: 64px;
-  height: 80px;
+  width: 80px;
+  height: 100px;
   position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  filter: drop-shadow(0 4px 20px rgba(255, 107, 53, 0.4));
+  filter: drop-shadow(0 6px 28px rgba(255, 107, 53, 0.55)) drop-shadow(0 0 40px rgba(255, 69, 0, 0.3));
 }
 
 .onboarding__fire-icon .ob-flame {
@@ -2486,8 +2486,8 @@ button:focus-visible {
 }
 
 .onboarding__fire-icon .ob-flame--outer {
-  width: 48px;
-  height: 64px;
+  width: 60px;
+  height: 80px;
   left: 50%;
   transform: translateX(-50%);
   background: linear-gradient(to top, var(--deep-fire) 0%, var(--red-fire) 25%, var(--orange) 50%, var(--warm-gold) 80%, rgba(255, 248, 231, 0.6) 100%);
@@ -2496,8 +2496,8 @@ button:focus-visible {
 }
 
 .onboarding__fire-icon .ob-flame--mid {
-  width: 32px;
-  height: 48px;
+  width: 40px;
+  height: 60px;
   left: 50%;
   transform: translateX(-50%);
   background: linear-gradient(to top, var(--orange) 0%, var(--warm-gold) 50%, var(--white-hot) 100%);
@@ -2506,8 +2506,8 @@ button:focus-visible {
 }
 
 .onboarding__fire-icon .ob-flame--inner {
-  width: 18px;
-  height: 32px;
+  width: 22px;
+  height: 40px;
   left: 50%;
   transform: translateX(-50%);
   background: linear-gradient(to top, var(--gold) 0%, var(--white-hot) 60%, #FFFFFF 100%);
@@ -2517,13 +2517,13 @@ button:focus-visible {
 
 .onboarding__fire-icon .ob-flame--glow {
   position: absolute;
-  bottom: -8px;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 72px;
-  height: 32px;
+  width: 90px;
+  height: 40px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255, 107, 53, 0.3) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(255, 107, 53, 0.45) 0%, rgba(255, 69, 0, 0.15) 50%, transparent 70%);
   animation: glow-pulse 2s ease-in-out infinite;
 }
 

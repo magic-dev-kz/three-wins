@@ -1,5 +1,12 @@
 # Three Wins — Changelog
 
+## v11.0 (2026-03-29)
+- Onboarding fire icon larger (80x100) with stronger dual-layer glow
+- Feed card left border color now tints by category (`--cat-color`)
+- Service worker cache bumped to `three-wins-v11`
+
+---
+
 ## v10.0 (2026-03-29)
 - Win input placeholders more helpful ("What went well today?", "Another win...", "One more thing...")
 - Feed card hover glow stronger for better visual feedback
