@@ -1,5 +1,15 @@
 # Three Wins — Changelog
 
+## v13.0 (2026-03-29) — Win Word Cloud
+
+### Added
+- **Win word cloud** -- weekly digest now shows top 5 most frequent words from the week's wins (excluding stopwords); words are sized proportionally to frequency with a gradient gold-to-orange style
+
+### Technical
+- Service worker cache bumped to `three-wins-v13`
+
+---
+
 ## v12.0 (2026-03-29)
 
 ### Added

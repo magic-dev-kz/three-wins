@@ -1295,9 +1295,55 @@
       $digestDays.appendChild(dayDiv);
     });
 
+    // v13: Win Word Cloud — top 5 most frequent words
+    var wordCloudHtml = buildWinWordCloud(entries);
+    if (wordCloudHtml) {
+      var wcDiv = document.createElement('div');
+      wcDiv.innerHTML = wordCloudHtml;
+      $digestDays.parentNode.insertBefore(wcDiv.firstChild, $digestDays);
+    }
+
     markDigestShown();
     $digestOverlay.removeAttribute('hidden');
     $digestDone.focus();
+  }
+
+  // === v13: Win Word Cloud ===
+  var WIN_STOPWORDS = ['the','a','an','and','or','but','in','on','at','to','for','of','with','by','from','is','it','this','that','are','was','be','has','have','had','not','no','do','does','did','will','would','can','could','should','may','might','shall','been','being','so','if','then','than','very','just','about','also','into','over','after','before','between','under','again','out','up','down','off','all','each','every','both','few','more','most','other','some','such','only','own','same','too','how','what','when','where','which','who','why','its','my','your','our','his','her','new','got','get','like','make','made','one','two','well','way','per','via','really','today','done','went','day','good','great','had','was','did','got'];
+
+  function buildWinWordCloud(entries) {
+    var allWords = [];
+    entries.forEach(function (e) {
+      e.wins.forEach(function (w) {
+        if (w.trim()) {
+          var words = w.toLowerCase().replace(/[^a-z0-9\s'-]/g, ' ').split(/\s+/);
+          words.forEach(function (word) {
+            if (word.length > 2 && WIN_STOPWORDS.indexOf(word) === -1) {
+              allWords.push(word);
+            }
+          });
+        }
+      });
+    });
+
+    if (allWords.length < 3) return '';
+
+    var freq = {};
+    allWords.forEach(function (w) { freq[w] = (freq[w] || 0) + 1; });
+
+    var sorted = Object.keys(freq).sort(function (a, b) { return freq[b] - freq[a]; });
+    var top5 = sorted.slice(0, 5);
+    var maxFreq = freq[top5[0]];
+
+    var html = '<div class="digest-word-cloud">';
+    html += '<div class="digest-word-cloud__title">Your Top Words</div>';
+    html += '<div class="digest-word-cloud__words">';
+    top5.forEach(function (word) {
+      var scale = 0.8 + (freq[word] / maxFreq) * 0.7;
+      html += '<span class="digest-word-cloud__word" style="font-size:' + scale.toFixed(2) + 'em">' + word + '</span>';
+    });
+    html += '</div></div>';
+    return html;
   }
 
   function dismissDigest() {
