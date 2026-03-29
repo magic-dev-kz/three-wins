@@ -1,5 +1,20 @@
 # Three Wins — Changelog
 
+## v14.0 (2026-03-29) — Streak Freeze
+
+### Added
+- **Streak freeze** -- "Freeze Streak" button appears when you have an active streak but haven't logged wins today
+- Freezing preserves your streak for the day without requiring an entry
+- Limited to 1 freeze per calendar month; button hides when used or unavailable
+- Frozen dates are stored in localStorage (`threeWins_streakFreezes`)
+- Streak calculation treats frozen dates as valid streak days
+- Styled as a compact ice-blue pill button below the streak counter
+
+### Technical
+- Service worker cache bumped to `three-wins-v14`
+
+---
+
 ## v13.0 (2026-03-29) — Win Word Cloud
 
 ### Added

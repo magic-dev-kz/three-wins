@@ -2299,6 +2299,31 @@ button:focus-visible {
   animation: celebration-pulse 1s var(--ease-out);
 }
 
+/* v14: Streak Freeze button */
+.btn-streak-freeze {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: #87CEEB;
+  background: rgba(135, 206, 235, 0.1);
+  border: 1.5px solid rgba(135, 206, 235, 0.3);
+  border-radius: 20px;
+  padding: 5px 14px;
+  cursor: pointer;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  transition: background var(--duration-fast), transform var(--duration-fast);
+}
+.btn-streak-freeze:hover {
+  background: rgba(135, 206, 235, 0.2);
+  transform: scale(1.05);
+}
+.btn-streak-freeze:disabled {
+  opacity: 0.4;
+  cursor: default;
+  transform: none;
+}
+
 /* ============================================
    v9: Streak Progress Ring (SVG)
    ============================================ */

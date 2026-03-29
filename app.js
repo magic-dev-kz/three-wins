@@ -184,20 +184,52 @@
     return entries;
   }
 
+  // === Streak Freeze (v14) ===
+  var FREEZE_KEY = STORAGE_PREFIX + 'streakFreezes';
+
+  function getStreakFreezes() {
+    try {
+      var raw = localStorage.getItem(FREEZE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveStreakFreeze(dateStr) {
+    var freezes = getStreakFreezes();
+    if (freezes.indexOf(dateStr) === -1) {
+      freezes.push(dateStr);
+    }
+    try { localStorage.setItem(FREEZE_KEY, JSON.stringify(freezes)); } catch (e) {}
+  }
+
+  function canFreezeThisMonth() {
+    var freezes = getStreakFreezes();
+    var now = new Date();
+    var monthPrefix = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    for (var i = 0; i < freezes.length; i++) {
+      if (freezes[i].substring(0, 7) === monthPrefix) return false;
+    }
+    return true;
+  }
+
+  function isFrozenDate(dateStr) {
+    return getStreakFreezes().indexOf(dateStr) !== -1;
+  }
+
   // === Streak Calculation ===
   function calculateStreak() {
     var today = todayKey();
     var checkDate = today;
 
-    if (!loadEntry(today)) {
+    if (!loadEntry(today) && !isFrozenDate(today)) {
       checkDate = prevDay(today);
-      if (!loadEntry(checkDate)) {
+      if (!loadEntry(checkDate) && !isFrozenDate(checkDate)) {
         return 0;
       }
     }
 
     var streak = 0;
-    while (loadEntry(checkDate)) {
+    while (loadEntry(checkDate) || isFrozenDate(checkDate)) {
       streak++;
       checkDate = prevDay(checkDate);
     }
@@ -1706,7 +1738,38 @@
     showMonthlySummary();
     // v12: Show last year's wins on load
     showLastYearWins();
+
+    // v14: Streak freeze button
+    var $btnFreeze = document.getElementById('btn-streak-freeze');
+    if ($btnFreeze) {
+      var todayEntry2 = loadEntry(today);
+      if (!todayEntry2 && canFreezeThisMonth() && streak > 0) {
+        $btnFreeze.hidden = false;
+      } else {
+        $btnFreeze.hidden = true;
+      }
+    }
   }
+
+  // v14: Streak freeze click handler
+  (function initStreakFreeze() {
+    var $btnFreeze = document.getElementById('btn-streak-freeze');
+    if (!$btnFreeze) return;
+    $btnFreeze.addEventListener('click', function () {
+      if (!canFreezeThisMonth()) return;
+      var today = todayKey();
+      saveStreakFreeze(today);
+      $btnFreeze.textContent = '\u2744 Frozen!';
+      $btnFreeze.disabled = true;
+      var streak = calculateStreak();
+      updateFlame(streak);
+      updateShareButton(streak);
+      updateProgressRing(streak);
+      updateWeeklyDots();
+      updateAchievementBadges(streak);
+      setTimeout(function () { $btnFreeze.hidden = true; }, 1500);
+    });
+  })();
 
   document.addEventListener('visibilitychange', function () {
     if (!document.hidden && todayKey() !== _renderedDateKey) {
