@@ -166,6 +166,13 @@
     navigator.serviceWorker.register('./sw.js');
   }
 </script>
+<div class="pwa-install-banner" id="pwaInstallBanner" role="banner">
+  <div class="pwa-install-banner__text"><strong>Install Three Wins</strong> for daily offline journaling</div>
+  <div class="pwa-install-banner__actions">
+    <button class="pwa-install-banner__btn pwa-install-banner__btn--dismiss" id="pwaInstallDismiss">Not now</button>
+    <button class="pwa-install-banner__btn pwa-install-banner__btn--install" id="pwaInstallBtn">Install</button>
+  </div>
+</div>
 <div class="oc-footer"><a href="https://magic-dev-kz.github.io/openclaw/" target="_blank" rel="noopener">More free tools → OpenClaw</a></div>
 </body>
 </html>

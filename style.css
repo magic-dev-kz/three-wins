@@ -1,5 +1,5 @@
 /* ============================================
-   Three Wins — Daily Wins Journal  (v6)
+   Three Wins — Daily Wins Journal  (v7)
    Dark-only, mobile-first, CSS flame animation
    Glassmorphism + Inter + micro-animations
    Categories, Export, Confetti, Milestones
@@ -1879,6 +1879,58 @@ button:focus-visible {
     padding: 48px 40px;
   }
 }
+/* === v7: PWA Install Banner === */
+.pwa-install-banner {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--bg-elevated);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
+  padding: 14px 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-sans);
+  animation: pwaSlideUp 0.35s var(--ease-out) both;
+}
+.pwa-install-banner.visible { display: flex; }
+.pwa-install-banner__text {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+.pwa-install-banner__text strong { font-weight: 700; color: var(--orange); }
+.pwa-install-banner__actions { display: flex; gap: 8px; flex-shrink: 0; }
+.pwa-install-banner__btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-sans);
+  transition: opacity var(--duration-fast);
+}
+.pwa-install-banner__btn--install {
+  background: linear-gradient(135deg, var(--orange), var(--red-fire));
+  color: #fff;
+}
+.pwa-install-banner__btn--dismiss {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+@keyframes pwaSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 .oc-footer{text-align:center;padding:20px 16px 24px;margin-top:24px}
 .oc-footer a{font-size:.78rem;color:var(--text-muted,var(--text-secondary,#888));text-decoration:none;opacity:.6;transition:opacity .2s}
 .oc-footer a:hover{opacity:1}

@@ -1,5 +1,15 @@
 # Three Wins — Changelog
 
+## v7.0 (2026-03-29)
+### Added
+- **PWA install prompt** — custom banner appears after 3+ visits when the browser fires `beforeinstallprompt`; glassmorphism styling with orange gradient install button; dismissible with localStorage persistence
+- **Keyboard shortcut: Enter to save** — pressing Enter in the last win input (Win #3) submits the form and saves all wins, instead of doing nothing
+- **Auto-focus first empty win** — on page load (when no entry exists for today), the cursor is placed in the first empty win input field instead of always focusing Win #1
+
+### Changed
+- Version bump to v7.0
+- CSS comment header updated to v7
+
 ## v6.0 (2026-03-29)
 ### Win Save Animation
 - Card pulse animation (`card-pulse`) triggers on the wins form when saving 3 wins

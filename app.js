@@ -529,9 +529,16 @@
 
   $inputs.forEach(function (input, i) {
     input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && i < $inputs.length - 1) {
+      if (e.key === 'Enter') {
         e.preventDefault();
-        $inputs[i + 1].focus();
+        if (i < $inputs.length - 1) {
+          $inputs[i + 1].focus();
+        } else {
+          // v7: Enter on last win input = save all wins
+          if (!$btnDone.disabled && !$btnDone.hidden) {
+            $form.requestSubmit ? $form.requestSubmit() : $btnDone.click();
+          }
+        }
       }
     });
   });
@@ -1388,6 +1395,61 @@
     }
   });
 
+  // === v7: Auto-focus first empty win input ===
+  function focusFirstEmptyWin() {
+    for (var i = 0; i < $inputs.length; i++) {
+      if (!$inputs[i].value.trim()) {
+        $inputs[i].focus();
+        return;
+      }
+    }
+    // All filled — focus first input as fallback
+    $inputs[0].focus();
+  }
+
+  // === v7: PWA Install Prompt (after 3+ visits) ===
+  (function initPWAInstall() {
+    var VISIT_KEY = 'threeWins_visit_count';
+    var DISMISSED_KEY = 'threeWins_pwa_dismissed';
+    var deferredPrompt = null;
+
+    try {
+      var visits = parseInt(localStorage.getItem(VISIT_KEY) || '0', 10) + 1;
+      localStorage.setItem(VISIT_KEY, String(visits));
+
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (visits >= 3 && !localStorage.getItem(DISMISSED_KEY)) {
+          var banner = document.getElementById('pwaInstallBanner');
+          if (banner) banner.classList.add('visible');
+        }
+      });
+
+      var installBtn = document.getElementById('pwaInstallBtn');
+      var dismissBtn = document.getElementById('pwaInstallDismiss');
+
+      if (installBtn) {
+        installBtn.addEventListener('click', function () {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function () { deferredPrompt = null; });
+          }
+          var banner = document.getElementById('pwaInstallBanner');
+          if (banner) banner.classList.remove('visible');
+        });
+      }
+
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function () {
+          var banner = document.getElementById('pwaInstallBanner');
+          if (banner) banner.classList.remove('visible');
+          try { localStorage.setItem(DISMISSED_KEY, '1'); } catch (e) {}
+        });
+      }
+    } catch (e) {}
+  })();
+
   // === Init ===
 
   var _renderedDateKey = null;
@@ -1415,7 +1477,8 @@
       });
       restoreCategoryPills([null, null, null]);
       showEditState();
-      $inputs[0].focus();
+      // v7: Auto-focus first empty win input
+      focusFirstEmptyWin();
     }
 
     var streak = calculateStreak();
