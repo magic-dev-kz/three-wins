@@ -1,5 +1,15 @@
 # Three Wins — Changelog
 
+## v22.0 (2026-03-29) — Markdown Export
+
+- **Markdown export**: "Export as Markdown" button downloads a `.md` file with formatted journal — date headers, numbered wins with category tags, reflections, and current streak with fire emoji
+- SW cache bumped to `three-wins-v22`
+
+## v21.0 (2026-03-29) — Win Search
+
+- **Win search**: Search input above the feed to find past wins by text match; debounced 200ms; highlights matching text with `<mark>` tag; shows result count and category tags; max 50 results shown; feed hidden during search, restored when cleared
+- SW cache bumped to `three-wins-v21`
+
 ## v20.0 (2026-03-29) — Print Styles
 
 - **Print stylesheet**: `@media print` rules — hides onboarding, flame animation, buttons, templates; shows today's wins + streak; white bg, black text; page breaks on win fields

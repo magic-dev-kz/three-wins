@@ -180,6 +180,7 @@
 
   <div class="export-wrap" id="export-wrap">
     <button type="button" class="btn--export" id="btn-export" aria-label="Export all wins as text file">Export Wins</button>
+    <button type="button" class="btn--export" id="btn-export-md" aria-label="Export all wins as Markdown file" style="margin-top:8px;">Export as Markdown</button>
   </div>
 
   <div class="monthly-summary" id="monthly-summary" hidden>
@@ -190,6 +191,11 @@
     </div>
   </div>
 
+  <!-- v21: Win Search -->
+  <div id="win-search-wrap" style="margin:0 auto 12px;max-width:560px;padding:0 var(--space-side,16px);">
+    <input type="search" id="win-search-input" placeholder="Search past wins..." aria-label="Search past wins" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--border,#333);border-radius:10px;background:var(--bg-input,#141414);color:var(--text,#f5f0e8);font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23888%22 stroke-width=%222%22><circle cx=%2211%22 cy=%2211%22 r=%228%22/><path d=%22M21 21l-4.35-4.35%22/></svg>');background-repeat:no-repeat;background-position:10px center;background-size:16px;">
+    <div id="win-search-results" style="display:none;margin-top:8px;"></div>
+  </div>
   <section class="feed" id="feed" aria-label="Past wins">
     <h2 class="sr-only">Past entries</h2>
   </section>

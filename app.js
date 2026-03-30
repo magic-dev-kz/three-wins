@@ -1171,6 +1171,66 @@
 
   $btnExport.addEventListener('click', exportWins);
 
+  // === Export as Markdown (v22) ===
+  var $btnExportMd = document.getElementById('btn-export-md');
+
+  function exportAsMarkdown() {
+    var entries = getAllEntries();
+    if (entries.length === 0) return;
+
+    var streak = calculateStreak();
+    var lines = ['# Three Wins Journal', ''];
+
+    entries.forEach(function (entry) {
+      // Format date header
+      var parts = entry.date.split('-');
+      var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      var months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+      var dateHeader = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      lines.push('## ' + dateHeader);
+
+      // Wins with categories
+      var cats = entry.categories || [null, null, null];
+      for (var i = 0; i < entry.wins.length; i++) {
+        var win = entry.wins[i];
+        if (!win) continue;
+        var line = (i + 1) + '. ' + win;
+        if (cats[i]) line += ' [' + cats[i] + ']';
+        lines.push(line);
+      }
+
+      // Reflection
+      if (entry.reflection) {
+        lines.push('');
+        lines.push('Reflection: ' + entry.reflection);
+      }
+
+      lines.push('');
+    });
+
+    // Streak at the end
+    if (streak > 0) {
+      lines.push('---');
+      lines.push('');
+      lines.push('Streak: ' + streak + ' day' + (streak !== 1 ? 's' : '') + ' \uD83D\uDD25');
+      lines.push('');
+    }
+
+    var text = lines.join('\n');
+    var blob = new Blob([text], { type: 'text/markdown' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'three-wins-journal.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  $btnExportMd.addEventListener('click', exportAsMarkdown);
+
   function updateExportButton() {
     var $exportWrap = document.getElementById('export-wrap');
     $exportWrap.hidden = !hasAnyEntry();
@@ -2098,4 +2158,73 @@
   initCategoryPills();
   showOnboarding();
   init();
+
+  // === v21: Win Search ===
+  (function initWinSearch() {
+    var searchInput = document.getElementById('win-search-input');
+    var searchResults = document.getElementById('win-search-results');
+    if (!searchInput || !searchResults) return;
+    var searchTimer = null;
+
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(doSearch, 200);
+    });
+
+    function doSearch() {
+      var query = searchInput.value.trim().toLowerCase();
+      if (query.length < 2) {
+        searchResults.style.display = 'none';
+        searchResults.innerHTML = '';
+        $feed.style.display = '';
+        return;
+      }
+
+      var entries = getAllEntries();
+      var matches = [];
+      entries.forEach(function(entry) {
+        entry.wins.forEach(function(win, idx) {
+          if (win && win.toLowerCase().indexOf(query) > -1) {
+            matches.push({ date: entry.date, win: win, cat: entry.categories ? entry.categories[idx] : null });
+          }
+        });
+      });
+
+      if (matches.length === 0) {
+        searchResults.style.display = 'block';
+        searchResults.innerHTML = '<div style="color:var(--text-muted,#888);font-size:.85rem;padding:8px 0;">No wins matching "' + query.replace(/</g, '&lt;') + '"</div>';
+        $feed.style.display = 'none';
+        return;
+      }
+
+      $feed.style.display = 'none';
+      searchResults.style.display = 'block';
+      var html = '<div style="font-size:.8rem;color:var(--text-muted,#888);margin-bottom:6px;">' + matches.length + ' result' + (matches.length === 1 ? '' : 's') + '</div>';
+      var shown = matches.slice(0, 50);
+      shown.forEach(function(m) {
+        var highlighted = m.win.replace(new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark style="background:rgba(255,179,71,.25);color:inherit;border-radius:2px;padding:0 1px;">$1</mark>');
+        var catTag = '';
+        if (m.cat && CATEGORY_COLORS && CATEGORY_COLORS[m.cat]) {
+          catTag = '<span style="font-size:.7rem;padding:1px 6px;border-radius:4px;background:' + CATEGORY_COLORS[m.cat] + '22;color:' + CATEGORY_COLORS[m.cat] + ';margin-right:6px;">' + m.cat + '</span>';
+        }
+        html += '<div style="padding:8px 10px;border-left:2px solid var(--accent,#FFB347);margin-bottom:6px;border-radius:0 6px 6px 0;background:var(--bg-input,rgba(255,255,255,.03));font-size:.9rem;">';
+        html += '<div style="font-size:.7rem;color:var(--text-muted,#888);margin-bottom:2px;">' + formatDateDisplay(m.date) + '</div>';
+        html += catTag + highlighted;
+        html += '</div>';
+      });
+      if (matches.length > 50) {
+        html += '<div style="font-size:.8rem;color:var(--text-muted,#888);padding:4px 0;">...and ' + (matches.length - 50) + ' more</div>';
+      }
+      searchResults.innerHTML = html;
+    }
+
+    // Clear search on input clear
+    searchInput.addEventListener('search', function() {
+      if (!searchInput.value) {
+        searchResults.style.display = 'none';
+        searchResults.innerHTML = '';
+        $feed.style.display = '';
+      }
+    });
+  })();
 })();
