@@ -1,6 +1,13 @@
 # Three Wins — Changelog
 
 
+
+## v24.0 (2026-03-29) — JSON-LD Structured Data
+
+- **JSON-LD structured data**: Added WebApplication schema markup in `<head>` for improved SEO and rich search results
+- SW cache bumped to `three-wins-v24`
+
+---
 ## v23.0 (2026-03-29) — Deferred Font Loading
 
 - **Non-blocking Google Fonts**: Font CSS changed from render-blocking `<link rel="stylesheet">` to `<link rel="preload" ... onload>` with `<noscript>` fallback — improves First Contentful Paint
