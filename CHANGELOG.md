@@ -2,6 +2,12 @@
 
 
 
+## v25.0 (2026-03-29) — Security Meta Tags
+
+- **Security hardening**: Added `X-Content-Type-Options: nosniff`, `referrer: no-referrer`, and `format-detection: telephone=no` meta tags to `<head>`
+- SW cache bumped to `three-wins-v25`
+
+---
 ## v24.0 (2026-03-29) — JSON-LD Structured Data
 
 - **JSON-LD structured data**: Added WebApplication schema markup in `<head>` for improved SEO and rich search results
