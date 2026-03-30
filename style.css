@@ -2718,3 +2718,24 @@ button:focus-visible {
 .oc-footer{text-align:center;padding:20px 16px 24px;margin-top:24px}
 .oc-footer a{font-size:.78rem;color:var(--text-muted,var(--text-secondary,#888));text-decoration:none;opacity:.6;transition:opacity .2s}
 .oc-footer a:hover{opacity:1}
+
+/* === Print Styles === */
+@media print{
+  .onboarding,.skip-link,.pwa-banner,.oc-footer,.toast,
+  .flame-container,.progress-ring-wrap,.weekly-dots,
+  .win-templates,.category-pills,.btn-streak-freeze,
+  .achievement-badges,.empty-state,.cat-pill,
+  .reflection-footer,.theme-toggle,
+  button{display:none!important}
+  body{background:#fff!important;color:#000!important;font-size:12pt}
+  .app{max-width:100%;padding:0;margin:0;background:#fff!important}
+  .greeting-hero{color:#000!important}
+  .streak{color:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .streak__count{color:#000!important}
+  .date{color:#333!important}
+  .wins{background:#fff!important}
+  .wins__input{border:1px solid #ccc!important;background:#fff!important;color:#000!important;padding:8px}
+  .wins__field{break-inside:avoid;margin-bottom:8px}
+  .reflection{break-inside:avoid;border:1px solid #ccc;background:#fff!important;color:#000!important;box-shadow:none;padding:12px;margin-top:12px}
+  @page{margin:1.5cm;size:auto}
+}

@@ -1,5 +1,10 @@
 # Three Wins — Changelog
 
+## v20.0 (2026-03-29) — Print Styles
+
+- **Print stylesheet**: `@media print` rules — hides onboarding, flame animation, buttons, templates; shows today's wins + streak; white bg, black text; page breaks on win fields
+- SW cache bumped to `three-wins-v20`
+
 ## v19.0 (2026-03-29) — Error Handling Hardening
 
 - **Date validation**: Validate date format (YYYY-MM-DD) before localStorage save to prevent corrupt keys
