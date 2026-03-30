@@ -1,5 +1,12 @@
 # Three Wins — Changelog
 
+
+## v23.0 (2026-03-29) — Deferred Font Loading
+
+- **Non-blocking Google Fonts**: Font CSS changed from render-blocking `<link rel="stylesheet">` to `<link rel="preload" ... onload>` with `<noscript>` fallback — improves First Contentful Paint
+- SW cache bumped to `three-wins-v23`
+
+---
 ## v22.0 (2026-03-29) — Markdown Export
 
 - **Markdown export**: "Export as Markdown" button downloads a `.md` file with formatted journal — date headers, numbered wins with category tags, reflections, and current streak with fire emoji
