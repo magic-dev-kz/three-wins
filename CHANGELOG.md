@@ -1,5 +1,10 @@
 # Three Wins — Changelog
 
+## v19.0 (2026-03-29) — Error Handling Hardening
+
+- **Date validation**: Validate date format (YYYY-MM-DD) before localStorage save to prevent corrupt keys
+- SW cache bumped to `three-wins-v19`
+
 ## v18.0 (2026-03-29) — SEO / Meta Pass
 
 - **robots meta**: Added `<meta name="robots" content="index, follow">`

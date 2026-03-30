@@ -118,7 +118,19 @@
   }
 
   // === Storage ===
+  // v19: Validate date format before localStorage save
+  function isValidDateKey(key) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(key)) return false;
+    var parts = key.split('-');
+    var d = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+    return d.getFullYear() === parseInt(parts[0],10) && d.getMonth() === parseInt(parts[1],10)-1 && d.getDate() === parseInt(parts[2],10);
+  }
+
   function saveEntry(dateKey, wins, categories, reflection) {
+    if (!isValidDateKey(dateKey)) {
+      console.warn('ThreeWins: invalid date key, skipping save:', dateKey);
+      return false;
+    }
     var data = {
       wins: wins,
       categories: categories || [null, null, null],
