@@ -231,9 +231,9 @@
 <div class="save-toast" id="save-toast" aria-live="polite">Wins saved!</div>
 <script src="app.js"></script>
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
-  }
+  // v26: Defer SW registration to not block first paint
+  if ('requestIdleCallback' in window) { requestIdleCallback(function() { if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); } }); }
+  else { setTimeout(function() { if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); } }, 100); }
 </script>
 <div class="pwa-install-banner" id="pwaInstallBanner" role="banner">
   <div class="pwa-install-banner__text"><strong>Install Three Wins</strong> for daily offline journaling</div>

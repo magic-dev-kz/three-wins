@@ -2,6 +2,12 @@
 
 
 
+## v26.0 (2026-03-29) — Deferred Init for Faster First Paint
+
+- **Performance: deferred non-critical init**: Achievement badges, feed rendering, weekly digest, monthly summary, last year's wins, and SW registration wrapped in `requestIdleCallback` (with `setTimeout` fallback) so main UI renders before secondary features load
+- SW cache bumped to `three-wins-v26`
+
+---
 ## v25.0 (2026-03-29) — Security Meta Tags
 
 - **Security hardening**: Added `X-Content-Type-Options: nosniff`, `referrer: no-referrer`, and `format-detection: telephone=no` meta tags to `<head>`

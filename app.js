@@ -1871,12 +1871,18 @@
     updateGreetingHero();
     updateProgressRing(streak);
     updateWeeklyDots();
-    updateAchievementBadges(streak);
-    renderFeed();
-    showWeeklyDigest();
-    showMonthlySummary();
+
+    // v26: Defer non-critical features to not block first paint
+    var _deferInit = function(fn) {
+      if ('requestIdleCallback' in window) { requestIdleCallback(fn); }
+      else { setTimeout(fn, 100); }
+    };
+    _deferInit(function() { updateAchievementBadges(streak); });
+    _deferInit(function() { renderFeed(); });
+    _deferInit(function() { showWeeklyDigest(); });
+    _deferInit(function() { showMonthlySummary(); });
     // v12: Show last year's wins on load
-    showLastYearWins();
+    _deferInit(function() { showLastYearWins(); });
 
     // v14: Streak freeze button
     var $btnFreeze = document.getElementById('btn-streak-freeze');
